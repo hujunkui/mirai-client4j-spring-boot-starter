@@ -46,14 +46,15 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
         executor.execute(processor);
         LOGGER.info("messageProcessor has been started!");
     }
-    public void initSessionKey()  {
+
+    public void initSessionKey() {
         JSONObject params = new JSONObject();
         params.set("verifyKey", context.getVerifyKey());
         // initialize: verify your qq account
         String res = "";
         try {
             res = HttpUtil.post(MiraiURL.VERIFY, JSONUtil.toJsonStr(params));
-        }catch (IORuntimeException exception){
+        } catch (IORuntimeException exception) {
             LOGGER.error("sessionKey init failed,have you started mirai?");
             System.exit(-1);
         }
@@ -70,7 +71,7 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
         String res = "";
         try {
             res = HttpUtil.post(MiraiURL.BIND, JSONUtil.toJsonStr(params));
-        }catch (IORuntimeException exception){
+        } catch (IORuntimeException exception) {
             LOGGER.error("activate sessionKey failed,have you started mirai?");
             System.exit(-1);
         }
@@ -79,27 +80,41 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
     }
 
     // 扫描容器中所有标记有CommandListener的类 将类中OnCommand标记的方法与其bean初始化到miraiContext
-    public void registry(){
+    public void registry() {
         ApplicationContext applicationContext = ApplicationContextHolder.getContext();
         Map<String, Object> targetBeans = applicationContext.getBeansWithAnnotation(CommandListener.class);
         List<Class<?>> allClasses = new ArrayList<>();
         // 拿到所有的带OnCommand的bean
-        targetBeans.forEach((k,v)->allClasses.add(applicationContext.getType(k)));
-        Map<String, Method>processMethods = new HashMap<>();
-        Map<Method, Object>methodBeans = new HashMap<>();
-        for(Class<?>clazz:allClasses){
+        targetBeans.forEach((k, v) -> allClasses.add(applicationContext.getType(k)));
+        Map<String, Method> processMethods = new HashMap<>();
+        Map<String, Method> processMethodsOther = new HashMap<>();
+        Map<Method, Object> methodBeans = new HashMap<>();
+        for (Class<?> clazz : allClasses) {
             Method[] methods = clazz.getMethods();
-            for(Method method:methods){
+            for (Method method : methods) {
                 OnCommand onCommand = null;
                 // 找到带OnCommand注解的方法
-                if(method!=null&&(onCommand = AnnotationUtils.findAnnotation(method, OnCommand.class))!=null){
+                if (method != null && (onCommand = AnnotationUtils.findAnnotation(method, OnCommand.class)) != null) {
                     LOGGER.info("register method:{}, command:{}", method.getName(), onCommand.command());
-                    processMethods.put(onCommand.command(), method);
-                    methodBeans.put(method,applicationContext.getBean(method.getDeclaringClass()));
+                    String[] alias = onCommand.alias();
+                    for (String s : alias) {
+                        if (s.endsWith("*")) {
+                            processMethodsOther.put(s.substring(0, s.length() - 1), method);
+                        } else {
+                            processMethods.put(s, method);
+                        }
+                    }
+                    if (onCommand.command().endsWith("*")) {
+                        processMethodsOther.put(onCommand.command().substring(0, onCommand.command().length() - 1), method);
+                    } else {
+                        processMethods.put(onCommand.command(), method);
+                    }
+                    methodBeans.put(method, applicationContext.getBean(method.getDeclaringClass()));
                 }
             }
         }
         context.setProcessFunction(processMethods);
+        context.setProcessFunctionOther(processMethodsOther);
         context.setProcessBean(methodBeans);
     }
 }

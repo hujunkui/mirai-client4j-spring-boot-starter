@@ -28,6 +28,23 @@ public class StrategyContext {
         }
     }
 
+    public StrategyContext(String type, MessageChain chain, HttpApiClient httpApiClient, Long id, int messageId) {
+        this.chain = chain;
+        this.httpApiClient = httpApiClient;
+        this.id = id;
+        switch (type) {
+            case "FriendMessage":
+                strategy = new FriendStrategy(chain, httpApiClient, id);
+                break;
+            case "GroupMessage":
+                strategy = new GroupStrategy(chain, httpApiClient, id, messageId);
+                break;
+            case "TempMessage":
+                strategy = new TempStrategy(chain, httpApiClient, id);
+                break;
+        }
+    }
+
     public R<JSONObject> doExecute(){
         return strategy.doStrategy();
     }

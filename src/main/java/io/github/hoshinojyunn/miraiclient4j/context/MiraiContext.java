@@ -12,8 +12,10 @@ public class MiraiContext {
     private String verifyKey;
     private String session;
     private Long qq;
-    private Map<String, Method>processFunction;
-    private Map<Method, Object>processBean;
+    private Map<String, Method> processFunction;
+
+    private Map<String, Method> processFunctionOther;
+    private Map<Method, Object> processBean;
 
     public MiraiContext() {
     }
@@ -25,11 +27,19 @@ public class MiraiContext {
     }
 
 
-
-    public Optional<Method> findProcessFunction(String cmd){
-        return Optional.ofNullable(processFunction.get(cmd));
+    public Optional<Method> findProcessFunction(String cmd) {
+        Method method = processFunction.get(cmd);
+        if (method == null) {
+            for (String s : processFunctionOther.keySet()) {
+                if (cmd.startsWith(s)) {
+                    return Optional.ofNullable(processFunctionOther.get(s));
+                }
+            }
+        }
+        return Optional.ofNullable(method);
     }
-    public Optional<Object> findBeanWithMethod(Method method){
+
+    public Optional<Object> findBeanWithMethod(Method method) {
         return Optional.ofNullable(processBean.get(method));
     }
 
@@ -63,6 +73,10 @@ public class MiraiContext {
 
     public void setProcessFunction(Map<String, Method> processFunction) {
         this.processFunction = processFunction;
+    }
+
+    public void setProcessFunctionOther(Map<String, Method> processFunctionOther) {
+        this.processFunctionOther = processFunctionOther;
     }
 
     public Map<Method, Object> getProcessBean() {

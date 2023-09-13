@@ -16,7 +16,7 @@ public class EchoListener {
         this.bot = bot;
     }
 
-    @OnCommand(command = "/echo")
+    @OnCommand(command = ".echo")
     public void echo(MessageEvent message) throws Exception {
         String body = MessageTemplate.parseBody(message);
         MessageChain messageChain = new MessageChain().appendLast(new Plain(body));

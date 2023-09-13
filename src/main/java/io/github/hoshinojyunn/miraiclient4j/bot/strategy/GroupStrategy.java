@@ -12,15 +12,23 @@ public class GroupStrategy implements SendStrategy{
     private HttpApiClient httpApiClient;
     private Long id;
 
+    private int messageId;
+
     public GroupStrategy(MessageChain chain, HttpApiClient httpApiClient, Long id) {
         this.chain = chain;
         this.httpApiClient = httpApiClient;
         this.id = id;
     }
+    public GroupStrategy(MessageChain chain, HttpApiClient httpApiClient, Long id, int messageId) {
+        this.chain = chain;
+        this.httpApiClient = httpApiClient;
+        this.id = id;
+        this.messageId = messageId;
+    }
 
     @Override
     public R<JSONObject> doStrategy() {
-        GroupMessage groupMessage = MessageBuilder.buildGroupMessage(id, chain);
+        GroupMessage groupMessage = MessageBuilder.buildGroupMessage(id, chain, messageId);
         return httpApiClient.sendGroupMessage(groupMessage);
     }
 }

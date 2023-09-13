@@ -26,6 +26,17 @@ public class MessageBuilder {
         return groupMessage;
     }
 
+    public static GroupMessage buildGroupMessage(long target, MessageChain messages, int messageId){
+        GroupMessage groupMessage;
+        if (messageId != 0) {
+            groupMessage = new GroupMessage(target, messages, messageId);
+        } else {
+            groupMessage = new GroupMessage(target, messages);
+        }
+        groupMessage.setSessionKey(sessionKey);
+        return groupMessage;
+    }
+
 
     public static CommonMessage buildMessage(long target, MessageChain messages){
         CommonMessage commonMessage = new CommonMessage(target, messages);

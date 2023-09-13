@@ -15,6 +15,9 @@ public class MessageTaskBuilder {
     }
 
     public static MessageTask build(MessageEvent event, String cmd){
+        if (cmd.endsWith("*")) {
+            cmd = cmd.substring(0, cmd.length() - 1);
+        }
         Method processFunction = context.findProcessFunction(cmd).orElse(null);
         Assert.notNull(processFunction, "can't find process function of the command");
         Object target = context.findBeanWithMethod(processFunction).orElse(null);

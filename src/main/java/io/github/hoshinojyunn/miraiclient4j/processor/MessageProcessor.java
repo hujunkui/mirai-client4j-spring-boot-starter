@@ -56,7 +56,7 @@ public class MessageProcessor implements Runnable{
             cmd = splits[0];
         }
 
-        if(StringUtils.hasText(cmd) &&!cmd.startsWith("/")){
+        if(StringUtils.hasText(cmd) &&!cmd.startsWith(".") || !StringUtils.hasText(cmd)){
             LOGGER.info("非命令消息:{}", cmd + body);
             return;
         }

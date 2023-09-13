@@ -9,31 +9,32 @@ import java.util.Arrays;
 
 public class MessageTemplate {
 
-    public static String parseCmd(MessageEvent message){
+    public static String parseCmd(MessageEvent message) {
         JSONArray messageChain = message.getMessageChain();
-        if(messageChain.size()<2)
+        if (messageChain.size() < 2) {
             return "";
+        }
         Object o = messageChain.get(1);
         String text = JSONUtil.parseObj(o).getStr("text");
         return text.split(" ")[0];
     }
 
-    public static String parseBody(MessageEvent message){
+    public static String parseBody(MessageEvent message) {
         JSONArray messageChain = message.getMessageChain();
-        if(messageChain.size()<2)
+        if (messageChain.size() < 2)
             return "";
         Object o = messageChain.get(1);
         String text = JSONUtil.parseObj(o).getStr("text");
         String[] split = text.split(" ");
         StringBuffer res = new StringBuffer();
-        Arrays.stream(split).skip(1).forEach(t-> res.append(t).append(" "));
+        Arrays.stream(split).skip(1).forEach(t -> res.append(t).append(" "));
         return res.toString();
     }
 
-    public static Long getId(MessageEvent messageEvent){
+    public static Long getId(MessageEvent messageEvent) {
         String type = messageEvent.getType();
         Long res = null;
-        switch (type){
+        switch (type) {
             case "FriendMessage":
                 res = getSenderId(messageEvent);
                 break;
@@ -46,27 +47,32 @@ public class MessageTemplate {
         return res;
     }
 
-    public static Long getSenderId(MessageEvent messageEvent){
+    public static Long getSenderId(MessageEvent messageEvent) {
         JSONObject sender = messageEvent.getSender();
         return sender.getLong("id");
     }
 
-    public static Long getGroupId(MessageEvent messageEvent){
-        Integer res = (Integer)messageEvent.getSender().getByPath("group.id");
+    public static Integer getMessageId(MessageEvent messageEvent) {
+        JSONObject sender = (JSONObject) messageEvent.getMessageChain().get(0);
+        return sender.getInt("id");
+    }
+
+    public static Long getGroupId(MessageEvent messageEvent) {
+        Integer res = (Integer) messageEvent.getSender().getByPath("group.id");
         return Long.valueOf(res);
     }
 
-    public static String getSenderNickName(MessageEvent messageEvent){
+    public static String getSenderNickName(MessageEvent messageEvent) {
         JSONObject sender = messageEvent.getSender();
         return sender.getStr("nickname");
     }
 
-    public static String getSenderName(MessageEvent messageEvent){
+    public static String getSenderName(MessageEvent messageEvent) {
         JSONObject sender = messageEvent.getSender();
         return sender.getStr("memberName");
     }
 
-    public static String getMessageType(MessageEvent messageEvent){
+    public static String getMessageType(MessageEvent messageEvent) {
         return messageEvent.getType();
     }
 

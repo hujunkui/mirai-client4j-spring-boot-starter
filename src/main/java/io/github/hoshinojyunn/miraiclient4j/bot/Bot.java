@@ -13,14 +13,14 @@ import io.github.hoshinojyunn.miraiclient4j.utils.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Bot implements Action{
+public class Bot implements Action {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private Long qq;
     private HttpApiClient client;
 
 
     @Override
-    public void send(MessageEvent event, BaseType[]message, Boolean atSender) {
+    public void send(MessageEvent event, BaseType[] message, Boolean atSender) {
         MessageChain chain = new MessageChain();
         for (BaseType baseType : message) {
             chain.appendLast(baseType);
@@ -33,11 +33,31 @@ public class Bot implements Action{
         String messageType = MessageTemplate.getMessageType(event);
         Long id = MessageTemplate.getId(event);
         LOGGER.info("发送消息链:{}", chain.toString());
-        Long senderId = MessageTemplate.getSenderId(event);
-        if(atSender){
-            chain.appendFirst(new At(senderId));
+        if (atSender) {
+            doStrategy(chain, messageType, id, MessageTemplate.getMessageId(event));
+        } else {
+            doStrategy(chain, messageType, id);
         }
-        doStrategy(chain, messageType, id);
+    }
+
+    @Override
+    public void send(MessageEvent event, BaseType[] message) {
+        send(event, message, false);
+    }
+
+    @Override
+    public void send(MessageEvent event, MessageChain chain) {
+        send(event, chain, false);
+    }
+
+    @Override
+    public void sendQuoteMessage(MessageEvent event, BaseType[] message) {
+        send(event, message, true);
+    }
+
+    @Override
+    public void sendQuoteMessage(MessageEvent event, MessageChain chain) {
+        send(event, chain, true);
     }
 
     private void doStrategy(MessageChain chain, String messageType, Long id) {
@@ -45,7 +65,17 @@ public class Bot implements Action{
         StrategyContext strategyContext = new StrategyContext(messageType, chain, client, id);
         resp = strategyContext.doExecute();
         // 执行情况
-        if(resp!=null&&resp.getData().getInt("code")!=0){
+        if (resp != null && resp.getData().getInt("code") != 0) {
+            LOGGER.error("code:{}, msg:{}", resp.getData().getInt("code"), resp.getData().getStr("msg"));
+        }
+    }
+
+    private void doStrategy(MessageChain chain, String messageType, Long id, int messageId) {
+        R<JSONObject> resp = null;
+        StrategyContext strategyContext = new StrategyContext(messageType, chain, client, id, messageId);
+        resp = strategyContext.doExecute();
+        // 执行情况
+        if (resp != null && resp.getData().getInt("code") != 0) {
             LOGGER.error("code:{}, msg:{}", resp.getData().getInt("code"), resp.getData().getStr("msg"));
         }
     }
