@@ -10,11 +10,12 @@ import java.lang.reflect.Method;
 
 public class MessageTaskBuilder {
     private static MiraiContext context;
+
     static {
         context = ApplicationContextHolder.getBean(MiraiContext.class).orElse(null);
     }
 
-    public static MessageTask build(MessageEvent event, String cmd){
+    public static MessageTask build(MessageEvent event, String cmd) {
         if (cmd.endsWith("*")) {
             cmd = cmd.substring(0, cmd.length() - 1);
         }
@@ -22,8 +23,8 @@ public class MessageTaskBuilder {
         Assert.notNull(processFunction, "can't find process function of the command");
         Object target = context.findBeanWithMethod(processFunction).orElse(null);
         Assert.notNull(target, "can't find the bean of the method,maybe it isn't inject to spring context");
-        Object[]args = new Object[]{event};
-        return new MessageTask(processFunction, target,args);
+        Object[] args = new Object[]{event};
+        return new MessageTask(processFunction, target, args);
     }
 
 }

@@ -17,7 +17,7 @@ public class EchoListener {
     }
 
     @OnCommand(command = ".echo")
-    public void echo(MessageEvent message) throws Exception {
+    public void echo(MessageEvent message) {
         String body = MessageTemplate.parseBody(message);
         MessageChain messageChain = new MessageChain().appendLast(new Plain(body));
         bot.send(message, messageChain, true);

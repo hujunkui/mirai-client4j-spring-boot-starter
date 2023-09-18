@@ -16,6 +16,10 @@ public class MessageUtil {
         return new MessageChain().appendLast(new Plain(message));
     }
 
+    public static MessageChain buildMessage(StringBuilder message) {
+        return buildMessage(message.toString());
+    }
+
     public static MessageChain buildMessage(List<BaseType> messageList) {
         MessageChain messageChain = new MessageChain();
         for (BaseType baseType : messageList) {

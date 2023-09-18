@@ -21,7 +21,7 @@ public class MessageController {
     }
 
     @PostMapping("/messageListener")
-    public R<JSONObject> messageListener(@RequestBody String s){
+    public R<JSONObject> messageListener(@RequestBody String s) {
         LOGGER.info("from mirai message:{}", s);
         MessageEvent receivedMessage = JSONUtil.toBean(s, MessageEvent.class);
         messageProcessor.add(receivedMessage);

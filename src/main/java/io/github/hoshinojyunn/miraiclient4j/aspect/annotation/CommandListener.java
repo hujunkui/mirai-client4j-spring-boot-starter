@@ -1,6 +1,5 @@
 package io.github.hoshinojyunn.miraiclient4j.aspect.annotation;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;

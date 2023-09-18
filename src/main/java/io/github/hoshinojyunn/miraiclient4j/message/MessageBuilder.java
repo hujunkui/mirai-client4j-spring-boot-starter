@@ -8,28 +8,29 @@ import org.springframework.util.Assert;
 public class MessageBuilder {
 
     private static String sessionKey;
+
     static {
         MiraiContext context = ApplicationContextHolder.getBean(MiraiContext.class).orElse(null);
         Assert.notNull(context, "miraiContext session must be not null when built a message");
         sessionKey = context.getSession();
     }
 
-    public static FriendMessage buildFriendMessage(long target, MessageChain messages){
+    public static FriendMessage buildFriendMessage(long target, MessageChain messages) {
         FriendMessage friendMessage = new FriendMessage(target, messages);
         friendMessage.setSessionKey(sessionKey);
         return friendMessage;
     }
 
-    public static GroupMessage buildGroupMessage(long target, MessageChain messages){
+    public static GroupMessage buildGroupMessage(long target, MessageChain messages) {
         GroupMessage groupMessage = new GroupMessage(target, messages);
         groupMessage.setSessionKey(sessionKey);
         return groupMessage;
     }
 
-    public static GroupMessage buildGroupMessage(long target, MessageChain messages, int messageId){
+    public static GroupMessage buildGroupMessage(long target, MessageChain messages, int messageId) {
         GroupMessage groupMessage;
         if (messageId != 0) {
-            groupMessage = new GroupMessage(target, messages, messageId);
+            groupMessage = new GroupMessageQuote(target, messages, messageId);
         } else {
             groupMessage = new GroupMessage(target, messages);
         }
@@ -38,36 +39,29 @@ public class MessageBuilder {
     }
 
 
-    public static CommonMessage buildMessage(long target, MessageChain messages){
+    public static CommonMessage buildMessage(long target, MessageChain messages) {
         CommonMessage commonMessage = new CommonMessage(target, messages);
         commonMessage.setSessionKey(sessionKey);
         return commonMessage;
     }
 
-    public static TempMessage buildTempMessage(Long target, MessageChain messages){
+    public static TempMessage buildTempMessage(Long target, MessageChain messages) {
         TempMessage tempMessage = new TempMessage(target, null, messages);
         tempMessage.setSessionKey(sessionKey);
         return tempMessage;
     }
 
-    public static NudgeMessage buildNudgeMessage(Long target, Long subject, String kind){
+    public static NudgeMessage buildNudgeMessage(Long target, Long subject, String kind) {
         NudgeMessage nudgeMessage = new NudgeMessage(target, subject, kind);
         nudgeMessage.setSessionKey(sessionKey);
         return nudgeMessage;
     }
 
-    public static RecallMessage buildRecallMessage(Long target, Integer messageId){
+    public static RecallMessage buildRecallMessage(Long target, Integer messageId) {
         RecallMessage recallMessage = new RecallMessage(target, messageId);
         recallMessage.setSessionKey(sessionKey);
         return recallMessage;
     }
-
-
-
-
-
-
-
 
 
 }

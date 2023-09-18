@@ -11,15 +11,14 @@ import org.springframework.context.annotation.Configuration;
 public class BotInitConfiguration {
 
     @Bean
-    public BotFactory botFactory(MiraiContext context, HttpApiClient client){
+    public BotFactory botFactory(MiraiContext context, HttpApiClient client) {
         return new BotFactory(context, client);
     }
 
     @Bean
-    public Bot bot(BotFactory factory){
+    public Bot bot(BotFactory factory) {
         return factory.newBot();
     }
-
 
 
 }

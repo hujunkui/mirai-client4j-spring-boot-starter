@@ -5,12 +5,15 @@ import cn.hutool.json.JSONUtil;
 
 public abstract class AbstractType implements BaseType {
     private String type;
-    public String getType(){
+
+    public String getType() {
         return type;
     }
-    public void setType(String type){
+
+    public void setType(String type) {
         this.type = type;
     }
+
     @Override
     public JSONObject toJsonObject() {
         return JSONUtil.parseObj(this);

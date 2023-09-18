@@ -15,7 +15,7 @@ public class LoggerAspect {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Around("@annotation(onCommand)")
-    public Object logAdvice(ProceedingJoinPoint pjp, OnCommand onCommand){
+    public Object logAdvice(ProceedingJoinPoint pjp, OnCommand onCommand) {
         Object[] args = pjp.getArgs();
         Arrays.stream(args).forEach(arg -> LOGGER.info("传入参数:{}", JSONUtil.toJsonStr(arg)));
         Object res = null;

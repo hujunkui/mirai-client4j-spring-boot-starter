@@ -79,7 +79,9 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
         LOGGER.info("bind:{}", res);
     }
 
-    // 扫描容器中所有标记有CommandListener的类 将类中OnCommand标记的方法与其bean初始化到miraiContext
+    /**
+     * 扫描容器中所有标记有CommandListener的类 将类中OnCommand标记的方法与其bean初始化到miraiContext
+     */
     public void registry() {
         ApplicationContext applicationContext = ApplicationContextHolder.getContext();
         Map<String, Object> targetBeans = applicationContext.getBeansWithAnnotation(CommandListener.class);
@@ -97,6 +99,9 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
                 if (method != null && (onCommand = AnnotationUtils.findAnnotation(method, OnCommand.class)) != null) {
                     LOGGER.info("register method:{}, command:{}", method.getName(), onCommand.command());
                     String[] alias = onCommand.alias();
+                    /**
+                     * 提取别名
+                     */
                     for (String s : alias) {
                         if (s.endsWith("*")) {
                             processMethodsOther.put(s.substring(0, s.length() - 1), method);
@@ -104,6 +109,9 @@ public class ApplicationStartedListener implements ApplicationListener<Applicati
                             processMethods.put(s, method);
                         }
                     }
+                    /**
+                     * 以*结尾的命令为前缀匹配模式，其他的则为完全匹配模式
+                     */
                     if (onCommand.command().endsWith("*")) {
                         processMethodsOther.put(onCommand.command().substring(0, onCommand.command().length() - 1), method);
                     } else {

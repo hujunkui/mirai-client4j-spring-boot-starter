@@ -8,12 +8,12 @@ public class BotFactory {
     private MiraiContext miraiContext;
     private HttpApiClient httpClient;
 
-    public BotFactory(MiraiContext miraiContext,HttpApiClient httpClient) {
+    public BotFactory(MiraiContext miraiContext, HttpApiClient httpClient) {
         this.miraiContext = miraiContext;
         this.httpClient = httpClient;
     }
 
-    public Bot newBot(){
+    public Bot newBot() {
         Bot bot = new Bot();
         bot.setQq(miraiContext.getQq());
         bot.setClient(httpClient);

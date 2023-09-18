@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class MessageProcessor implements Runnable{
+public class MessageProcessor implements Runnable {
     private final Logger LOGGER = LoggerFactory.getLogger(MessageProcessor.class);
     private LinkedBlockingQueue<MessageEvent> messages;
     private FriendMessageProcessor friendMessageProcessor;
@@ -29,26 +29,28 @@ public class MessageProcessor implements Runnable{
         this.messages = new LinkedBlockingQueue<>(1024 * 1024);
     }
 
-
-    // 如果webhook开放多个接口可能会产生锁竞争
-    public void add(MessageEvent message){
+    /**
+     * 如果webhook开放多个接口可能会产生锁竞争
+     *
+     * @param message
+     */
+    public void add(MessageEvent message) {
         messages.offer(message);
     }
 
     public void process(MessageEvent message) throws Exception {
         JSONArray messageChain = message.getMessageChain();
-        if(messageChain==null||messageChain.isEmpty()||messageChain.size()<2)
+        if (messageChain == null || messageChain.isEmpty() || messageChain.size() < 2) {
             throw new MessageChainEmptyException();
+        }
         // 普通文字消息
-        Object temp =  messageChain.get(1);
-        String cmd = "",body = "";
-        String text = "";
-
-        text = JSONUtil.parseObj(temp).getStr("text");
-        if(StringUtils.hasText(text)){
-            String[]splits = text.split(" ");
+        Object temp = messageChain.get(1);
+        String cmd = "", body = "";
+        String text = JSONUtil.parseObj(temp).getStr("text");
+        if (StringUtils.hasText(text)) {
+            String[] splits = text.split(" ");
             // 拼接命令后的内容
-            if(splits.length>=2) {
+            if (splits.length >= 2) {
                 StringBuffer sb = new StringBuffer();
                 Arrays.stream(splits).skip(1).forEach(sb::append);
                 body = sb.toString();
@@ -56,25 +58,27 @@ public class MessageProcessor implements Runnable{
             cmd = splits[0];
         }
 
-        if(StringUtils.hasText(cmd) &&!cmd.startsWith(".") || !StringUtils.hasText(cmd)){
+        if (StringUtils.hasText(cmd) && !cmd.startsWith(".") || !StringUtils.hasText(cmd)) {
             LOGGER.info("非命令消息:{}", cmd + body);
             return;
         }
         String type = message.getType();
         LOGGER.info("收到命令消息:{},类型:{}", cmd + " " + body, type);
-        switch (type){
+        switch (type) {
             case "FriendMessage":
                 friendMessageProcessor.process(message, cmd);
                 break;
             case "GroupMessage":
                 groupMessageProcessor.process(message, cmd);
                 break;
+            default:
+                break;
         }
     }
 
     @Override
     public void run() {
-        while(true){
+        while (true) {
             try {
                 MessageEvent event = messages.take();
                 Assert.notNull(event, "消息事件不能为null");

@@ -9,18 +9,10 @@ public class GroupMessage extends SessionKey implements Message {
     private Long target;
     private MessageChain messageChain;
 
-    private int quote;
-
-
 
     public GroupMessage(Long target, MessageChain messageChain) {
         this.target = target;
         this.messageChain = messageChain;
-    }
-    public GroupMessage(Long target, MessageChain messageChain, int messageId) {
-        this.target = target;
-        this.messageChain = messageChain;
-        this.quote = messageId;
     }
 
     public Long getTarget() {
@@ -37,13 +29,5 @@ public class GroupMessage extends SessionKey implements Message {
 
     public void setMessageChain(MessageChain messageChain) {
         this.messageChain = messageChain;
-    }
-
-    public int getQuote() {
-        return quote;
-    }
-
-    public void setQuote(int quote) {
-        this.quote = quote;
     }
 }

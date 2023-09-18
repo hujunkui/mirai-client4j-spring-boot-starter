@@ -36,7 +36,7 @@ public class Bot implements Action {
         if (atSender) {
             doStrategy(chain, messageType, id, MessageTemplate.getMessageId(event));
         } else {
-            doStrategy(chain, messageType, id);
+            doStrategy(chain, messageType, id, 0);
         }
     }
 

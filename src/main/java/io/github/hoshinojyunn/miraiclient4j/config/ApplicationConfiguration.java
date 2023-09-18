@@ -14,12 +14,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class ApplicationConfiguration {
 
     @Bean
-    public ApplicationStartedListener applicationStartedListener(MessageProcessor processor, ThreadPoolTaskExecutor executor, ApplicationContextHolder applicationContextHolder, MiraiContext context){
+    public ApplicationStartedListener applicationStartedListener(MessageProcessor processor, ThreadPoolTaskExecutor executor, ApplicationContextHolder applicationContextHolder, MiraiContext context) {
         return new ApplicationStartedListener(processor, executor, applicationContextHolder, context);
     }
 
     @Bean
-    public ApplicationShutdownListener applicationShutdownListener(HttpApiClient httpApiClient, MiraiContext context){
+    public ApplicationShutdownListener applicationShutdownListener(HttpApiClient httpApiClient, MiraiContext context) {
         return new ApplicationShutdownListener(httpApiClient, context);
     }
 

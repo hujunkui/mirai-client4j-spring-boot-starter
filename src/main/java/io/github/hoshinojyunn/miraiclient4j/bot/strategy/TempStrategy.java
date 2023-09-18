@@ -7,7 +7,7 @@ import io.github.hoshinojyunn.miraiclient4j.message.MessageChain;
 import io.github.hoshinojyunn.miraiclient4j.message.messageRequest.request.TempMessage;
 import io.github.hoshinojyunn.miraiclient4j.utils.R;
 
-public class TempStrategy implements SendStrategy{
+public class TempStrategy implements SendStrategy {
     private MessageChain chain;
     private HttpApiClient httpApiClient;
     private Long id;

@@ -27,9 +27,20 @@ public class MiraiContext {
     }
 
 
+    /**
+     * 匹配命令对应的方法
+     * @param cmd 命令名称
+     * @return
+     */
     public Optional<Method> findProcessFunction(String cmd) {
+        /**
+         * 先匹配完全匹配的命令
+         */
         Method method = processFunction.get(cmd);
         if (method == null) {
+            /**
+             * 然后匹配前缀命令
+             */
             for (String s : processFunctionOther.keySet()) {
                 if (cmd.startsWith(s)) {
                     return Optional.ofNullable(processFunctionOther.get(s));

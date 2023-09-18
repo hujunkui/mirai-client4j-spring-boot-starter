@@ -1,7 +1,7 @@
 package io.github.hoshinojyunn.miraiclient4j.aspect.annotation;
 
 import cn.hutool.core.annotation.Alias;
-import org.springframework.core.annotation.AliasFor;
+import io.github.hoshinojyunn.miraiclient4j.bot.strategy.MessageValidateStrategy;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,4 +23,10 @@ public @interface OnCommand {
     String[] alias() default {};
 
     boolean at() default true;
+
+    /**
+     * 校验策略
+     * @return 策略类
+     */
+    Class<? extends MessageValidateStrategy> strategy() default MessageValidateStrategy.class;
 }

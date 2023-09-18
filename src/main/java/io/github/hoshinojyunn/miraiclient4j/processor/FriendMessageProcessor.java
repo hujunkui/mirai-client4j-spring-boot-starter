@@ -6,7 +6,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class FriendMessageProcessor implements Processor{
+public class FriendMessageProcessor implements Processor {
     private ThreadPoolTaskExecutor executor;
 
     public FriendMessageProcessor(ThreadPoolTaskExecutor executor) {
@@ -15,8 +15,9 @@ public class FriendMessageProcessor implements Processor{
 
     @Override
     public void process(MessageEvent message, String cmd) throws MessageTypeException, InvocationTargetException, IllegalAccessException {
-        if(!message.getType().equals("FriendMessage"))
+        if (!"FriendMessage".equals(message.getType())) {
             throw new MessageTypeException("FriendMessageProcessor can‘t process this message type");
+        }
         MessageTask task = MessageTaskBuilder.build(message, cmd);
         executor.execute(task);
     }

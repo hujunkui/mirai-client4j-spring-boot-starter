@@ -21,8 +21,7 @@ public class MessageTemplate {
 
     public static String parseBody(MessageEvent message) {
         JSONArray messageChain = message.getMessageChain();
-        if (messageChain.size() < 2)
-            return "";
+        if (messageChain.size() < 2) return "";
         Object o = messageChain.get(1);
         String text = JSONUtil.parseObj(o).getStr("text");
         String[] split = text.split(" ");

@@ -25,14 +25,12 @@ public class ApplicationShutdownListener implements ApplicationListener<ContextC
         R<JSONObject> resp = null;
         try {
             resp = httpApiClient.releaseSession(context.getQq());
-        }catch (RuntimeException exception){
+        } catch (RuntimeException exception) {
             LOGGER.error("session release failed,something went wrong!");
             return;
         }
 
-        if(resp.getData().getInt("code") == 0)
-            LOGGER.info("session release completed");
-        else
-            LOGGER.error("something went wrong when contextClosedEvent tried to release session!");
+        if (resp.getData().getInt("code") == 0) LOGGER.info("session release completed");
+        else LOGGER.error("something went wrong when contextClosedEvent tried to release session!");
     }
 }

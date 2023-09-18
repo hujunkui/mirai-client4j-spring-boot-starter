@@ -14,8 +14,9 @@ public class GroupMessageProcessor implements Processor{
 
     @Override
     public void process(MessageEvent message, String cmd) throws Exception {
-        if(!message.getType().equals("GroupMessage"))
+        if(!"GroupMessage".equals(message.getType())) {
             throw new MessageTypeException("GroupMessageProcessor can‘t process this message type");
+        }
         MessageTask task = MessageTaskBuilder.build(message, cmd);
         executor.execute(task);
     }

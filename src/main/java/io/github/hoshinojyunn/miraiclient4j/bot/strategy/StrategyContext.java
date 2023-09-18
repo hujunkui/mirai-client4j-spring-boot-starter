@@ -25,6 +25,8 @@ public class StrategyContext {
             case "TempMessage":
                 strategy = new TempStrategy(chain, httpApiClient, id);
                 break;
+            default:
+                break;
         }
     }
 
@@ -42,10 +44,12 @@ public class StrategyContext {
             case "TempMessage":
                 strategy = new TempStrategy(chain, httpApiClient, id);
                 break;
+            default:
+                break;
         }
     }
 
-    public R<JSONObject> doExecute(){
+    public R<JSONObject> doExecute() {
         return strategy.doStrategy();
     }
 }

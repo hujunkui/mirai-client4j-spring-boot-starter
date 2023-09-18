@@ -29,13 +29,13 @@ public class MiraiAutoConfiguration {
     @Configuration
     static public class AdapterConfiguration {
         @Bean
-        public RestTemplate restTemplate(){
+        public RestTemplate restTemplate() {
             return new RestTemplate();
         }
 
         @Bean
         @ConditionalOnProperty(prefix = "mirai.config", name = "api-adapter", havingValue = "http")
-        public HttpApiClient httpApiClient(){
+        public HttpApiClient httpApiClient() {
             return new HttpApiClient();
         }
 
@@ -49,20 +49,17 @@ public class MiraiAutoConfiguration {
         }
 
         @Bean
-        public FriendMessageProcessor friendMessageProcessor(ThreadPoolTaskExecutor executor){
+        public FriendMessageProcessor friendMessageProcessor(ThreadPoolTaskExecutor executor) {
             return new FriendMessageProcessor(executor);
         }
 
         @Bean
-        public GroupMessageProcessor groupMessageProcessor(ThreadPoolTaskExecutor executor){
+        public GroupMessageProcessor groupMessageProcessor(ThreadPoolTaskExecutor executor) {
             return new GroupMessageProcessor(executor);
         }
 
         @Bean
-        public MessageProcessor messageProcessor(
-                @Qualifier("friendMessageProcessor") FriendMessageProcessor friendMessageProcessor,
-                @Qualifier("groupMessageProcessor") GroupMessageProcessor groupMessageProcessor
-        ){
+        public MessageProcessor messageProcessor(@Qualifier("friendMessageProcessor") FriendMessageProcessor friendMessageProcessor, @Qualifier("groupMessageProcessor") GroupMessageProcessor groupMessageProcessor) {
             return new MessageProcessor(friendMessageProcessor, groupMessageProcessor);
         }
 
@@ -73,18 +70,18 @@ public class MiraiAutoConfiguration {
         private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
         @Bean
-        public MiraiURL miraiURL(){
+        public MiraiURL miraiURL() {
             return new MiraiURL();
         }
 
         @Bean
-        public ApplicationContextHolder applicationContextHolder(){
+        public ApplicationContextHolder applicationContextHolder() {
             return new ApplicationContextHolder();
         }
 
         @Bean
         @DependsOn({"applicationContextHolder"})
-        public MiraiContext miraiContext(MiraiProperties properties){
+        public MiraiContext miraiContext(MiraiProperties properties) {
             MiraiContext miraiContext = new MiraiContext();
             miraiContext.setVerifyKey(properties.getVerifyKey());
             miraiContext.setQq(properties.getQq());
@@ -99,7 +96,7 @@ public class MiraiAutoConfiguration {
     static public class ThreadPoolConfiguration {
 
         @Bean
-        public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
+        public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
             ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
             threadPoolTaskExecutor.setCorePoolSize(5);
             threadPoolTaskExecutor.setMaxPoolSize(10);
@@ -113,9 +110,9 @@ public class MiraiAutoConfiguration {
     }
 
     @Configuration
-    static public class AspectConfiguration{
+    static public class AspectConfiguration {
         @Bean
-        public LoggerAspect loggerAspect(){
+        public LoggerAspect loggerAspect() {
             return new LoggerAspect();
         }
     }

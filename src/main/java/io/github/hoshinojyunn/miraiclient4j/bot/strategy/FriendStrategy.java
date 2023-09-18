@@ -7,7 +7,7 @@ import io.github.hoshinojyunn.miraiclient4j.message.MessageChain;
 import io.github.hoshinojyunn.miraiclient4j.message.messageRequest.request.FriendMessage;
 import io.github.hoshinojyunn.miraiclient4j.utils.R;
 
-public class FriendStrategy implements SendStrategy{
+public class FriendStrategy implements SendStrategy {
     private MessageChain chain;
     private HttpApiClient httpApiClient;
     private Long id;

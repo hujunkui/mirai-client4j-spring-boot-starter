@@ -27,26 +27,29 @@ public class HttpApiClient extends HttpApi {
     private static class HttpApiUtil {
         private static MiraiContext context;
         private static RestTemplate restTemplate;
-        static{
+
+        static {
             context = ApplicationContextHolder.getBean(MiraiContext.class).orElse(null);
             restTemplate = ApplicationContextHolder.getBean(RestTemplate.class).orElse(null);
         }
 
-        public static R<JSONObject> get(String url){
+        public static R<JSONObject> get(String url) {
             HashMap<String, Object> params = new HashMap<>();
             params.put("sessionKey", context.getSession());
             return get(url, params);
         }
-        public static R<JSONObject> get(String url, Map<String,Object>params){
+
+        public static R<JSONObject> get(String url, Map<String, Object> params) {
             params.put("sessionKey", context.getSession());
             return R.ok(JSONUtil.parseObj(HttpUtil.get(url, params)));
         }
+
         public static R<JSONObject> upload(String url, String key, File file) throws JSONException {
             org.springframework.boot.configurationprocessor.json.JSONObject params = new org.springframework.boot.configurationprocessor.json.JSONObject();
             HttpHeaders headers = new HttpHeaders();
             MediaType mediaType = MediaType.parseMediaType("multipart/form-data;charset=UTF-8");
             headers.setContentType(mediaType);
-            headers.set("Accept",MediaType.APPLICATION_JSON.toString());
+            headers.set("Accept", MediaType.APPLICATION_JSON.toString());
             FileSystemResource resource = new FileSystemResource(file);
             params.put("sessionKey", context.getSession());
             params.put(key, resource);
@@ -57,21 +60,24 @@ public class HttpApiClient extends HttpApi {
             return R.ok(JSONUtil.parseObj(res));
         }
 
-        public static R<JSONObject> post(String url, String requestBody){
+        public static R<JSONObject> post(String url, String requestBody) {
             JSONObject params = JSONUtil.parseObj(requestBody);
             params.set("sessionKey", context.getSession());
             requestBody = JSONUtil.toJsonStr(params);
             return R.ok(JSONUtil.parseObj(HttpUtil.post(url, requestBody)));
         }
-        public static R<JSONObject> post(String url, Map<String,Object>params){
+
+        public static R<JSONObject> post(String url, Map<String, Object> params) {
             params.put("sessionKey", context.getSession());
             return R.ok(JSONUtil.parseObj(HttpUtil.post(url, params)));
         }
-        public static R<JSONObject> post(String url,Map<String,Object>params, String contentType){
+
+        public static R<JSONObject> post(String url, Map<String, Object> params, String contentType) {
             String res = HttpUtil.createPost(url).contentType(contentType).form(params).execute().body();
             return R.ok(JSONUtil.parseObj(res));
         }
     }
+
     @Override
     public R<JSONObject> getSessionInfo() {
         return HttpApiUtil.get(MiraiURL.SESSION_INFO);
@@ -171,7 +177,7 @@ public class HttpApiClient extends HttpApi {
     @Override
     public R<JSONObject> friendProfile(Long target) {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("target",target);
+        params.put("target", target);
         return HttpApiUtil.get(MiraiURL.FRIEND_PROFILE, params);
     }
 
